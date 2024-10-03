@@ -1,10 +1,8 @@
 name: app-deploy-workflow
-
 on:
   push:
     branches:
       - prod-stg
-
 jobs:
   deploy:
     name: Deploying NodeJS Application
@@ -22,10 +20,8 @@ jobs:
       MAIL_HOST: ${{secrets.MAIL_HOST}}
       MAIL_USERNAME: ${{secrets.MAIL_USERNAME}}
       MAIL_PASSWORD: ${{secrets.MAIL_PASSWORD}}
-
     steps:
       - uses: actions/checkout@v3
-
       - name: Deploying application to EC2
         run: |
           echo "$SSH_PRIVATE_KEY" > private_key && chmod 600 private_key
