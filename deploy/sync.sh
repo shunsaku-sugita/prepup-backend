@@ -1,13 +1,13 @@
 #!/bin/bash
 
 # Setting up the Node environment
-export NVM_DIR=~/.nvm
-source ~/.nvm/nvm.sh
+export NVM_DIR=/home/ubuntu/.nvm  # Use the correct path for the 'ubuntu' user
+source $NVM_DIR/nvm.sh  # Source the NVM script
 
 echo "Starting deployment process"
 
 # Download new version of the application
-cd /home/ubuntu/node-api
+cd /home/ubuntu/node-api || exit 1  # Exit if cd fails
 
 # Install the dependencies
 echo "Installing dependencies"
