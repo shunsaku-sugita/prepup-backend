@@ -1,23 +1,31 @@
 name: app-push-workflow
 
 on:
-    push:
-        branches:
-            - prod-stg
+  push:
+    branches:
+      - prod-stg
 
 jobs:
-    deploy:
-        name: Deploye node js service to EC2
-        runs-on: ubuntu-latest
+  deploy:
+    name: Deploye node js service to EC2
+    runs-on: ubuntu-latest
 
-        steps:
-            - name: Checkout the files
-              uses: actions/checkout@v2
+    steps:
+      - name: Checkout the files
+        uses: actions/checkout@v2
 
-            - name: Deploy/copy code to api server
-              uses: easingthemes/ssh-deploy@main
-              env:
-                SSH_PRIVATE_KEY: ${{secrets.EC2_SSH_KEY}}
-                REMOTE_HOST: ${{secrets.HOST_DNS}}
-                REMOTE_USER: ${{secrets.USERNAME}}
-                TARGET: ${{secrets.TARGET_DIR}}
+      - name: Deploy/copy code to api server
+        uses: easingthemes/ssh-deploy@main
+        env:
+          SSH_PRIVATE_KEY: ${{secrets.EC2_SSH_KEY}}
+          HOST_NAME: ${{secrets.HOST_DNS}}
+          REMOTE_USER: ${{secrets.USERNAME}}
+          TARGET: ${{secrets.TARGET_DIR}}
+          PORT: ${{secrets.PORT}}
+          TOKEN_KEY: ${{secrets.TOKEN_KEY}}
+          DB_CONN_STRING: ${{secrets.DB_CONN_STRING}}
+          DB_NAME: ${{secrets.DB_NAME}}
+          USERS_COLLECTION_NAME: ${{secrets.USERS_COLLECTION_NAME}}
+          MAIL_HOST: ${{secrets.MAIL_HOST}}
+          MAIL_USERNAME: ${{secrets.MAIL_USERNAME}}
+          MAIL_PASSWORD: ${{secrets.MAIL_PASSWORD}}
