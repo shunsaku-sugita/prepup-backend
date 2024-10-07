@@ -6,8 +6,15 @@ source ~/.nvm/nvm.sh
 
 echo "Starting deployment process"
 
-echo "testing env"
-echo "PORT: $PORT"
+echo "Adding enviorment variables"
+export PORT=$PORT
+export TOKEN_KEY=$TOKEN_KEY
+export DB_CONN_STRING=$DB_CONN_STRING
+export DB_NAME=$DB_NAME
+export USERS_COLLECTION_NAME=$USERS_COLLECTION_NAME
+export MAIL_HOST=$MAIL_HOST
+export MAIL_USERNAME=$MAIL_USERNAME
+export MAIL_PASSWORD=$MAIL_PASSWORD
 
 # Download new version of the application
 cd /home/ubuntu/node-api || { echo "Failed to change directory"; exit 1; }
