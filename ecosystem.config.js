@@ -2,7 +2,7 @@ module.exports = {
   apps: [
     {
       name: 'prepup', // Replace with your app's name
-      script: 'dist/index.js', // Path to your compiled JavaScript file
+      script: 'dist/src/index.js', // Path to your compiled JavaScript file
       instances: 'max', // Or a specific number of instances
       exec_mode: 'cluster', // Enable cluster mode
       env: {
