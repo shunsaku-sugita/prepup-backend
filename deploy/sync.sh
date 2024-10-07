@@ -6,6 +6,9 @@ source ~/.nvm/nvm.sh
 
 echo "Starting deployment process"
 
+ecoho "mongo"
+echo "DB_CONN_STRING=$DB_CONN_STRING"
+
 # Create or overwrite .env file and add environment variables
 ENV_FILE="/home/ubuntu/node-api/.env"
 echo "Creating .env file with environment variables..."
