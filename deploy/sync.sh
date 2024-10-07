@@ -6,6 +6,9 @@ source ~/.nvm/nvm.sh
 
 echo "Starting deployment process"
 
+echo "testing env"
+echo "PORT: $PORT"
+
 # Download new version of the application
 cd /home/ubuntu/node-api
 
