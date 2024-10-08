@@ -8,38 +8,37 @@ jobs:
     name: Deploying NodeJS Application
     runs-on: ubuntu-latest
     env:
-      SSH_PRIVATE_KEY: ${{secrets.EC2_SSH_KEY}}
-      HOST_NAME: ${{secrets.HOST_DNS}}
-      REMOTE_USER: ${{secrets.USERNAME}}
-      TARGET: ${{secrets.TARGET_DIR}}
-      PORT: ${{secrets.PORT}}
-      TOKEN_KEY: ${{secrets.TOKEN_KEY}}
-      DB_CONN_URI: ${{secrets.DB_CONN_STRING}}
-      DB_NAME: ${{secrets.DB_NAME}}
-      USERS_COLLECTION_NAME: ${{secrets.USERS_COLLECTION_NAME}}
-      MAIL_HOST: ${{secrets.MAIL_HOST}}
-      MAIL_USERNAME: ${{secrets.MAIL_USERNAME}}
-      MAIL_PASSWORD: ${{secrets.MAIL_PASSWORD}}
+      SSH_PRIVATE_KEY: ${{ secrets.EC2_SSH_KEY }}
+      HOST_NAME: ${{ secrets.HOST_DNS }}
+      REMOTE_USER: ${{ secrets.USERNAME }}
+      TARGET: ${{ secrets.TARGET_DIR }}
+      PORT: ${{ secrets.PORT }}
+      TOKEN_KEY: ${{ secrets.TOKEN_KEY }}
+      DB_CONN_URI: ${{ secrets.DB_CONN_STRING }}
+      DB_NAME: ${{ secrets.DB_NAME }}
+      USERS_COLLECTION_NAME: ${{ secrets.USERS_COLLECTION_NAME }}
+      MAIL_HOST: ${{ secrets.MAIL_HOST }}
+      MAIL_USERNAME: ${{ secrets.MAIL_USERNAME }}
+      MAIL_PASSWORD: ${{ secrets.MAIL_PASSWORD }}
     steps:
       - uses: actions/checkout@v3
       - name: Deploying application to EC2
         run: |
           echo "$SSH_PRIVATE_KEY" > private_key && chmod 600 private_key
           ssh -o StrictHostKeyChecking=no -i private_key ${REMOTE_USER}@${HOST_NAME} "
-            echo 'Exporting environment variables'
-            export PORT=$PORT
-            export TOKEN_KEY=$TOKEN_KEY
-            export DB_CONN_URI=$DB_CONN_URI
-            export DB_NAME=$DB_NAME
-            export USERS_COLLECTION_NAME=$USERS_COLLECTION_NAME
-            export MAIL_HOST=$MAIL_HOST
-            export MAIL_USERNAME=$MAIL_USERNAME
-            export MAIL_PASSWORD=$MAIL_PASSWORD
-    
+            # Create .env file and add environment variables
+            echo \"PORT=${{ secrets.PORT }}\" > $TARGET/.env
+            echo \"TOKEN_KEY=${{ secrets.TOKEN_KEY }}\" >> $TARGET/.env
+            echo \"DB_CONN_URI=${{ secrets.DB_CONN_STRING }}\" >> $TARGET/.env
+            echo \"DB_NAME=${{ secrets.DB_NAME }}\" >> $TARGET/.env
+            echo \"USERS_COLLECTION_NAME=${{ secrets.USERS_COLLECTION_NAME }}\" >> $TARGET/.env
+            echo \"MAIL_HOST=${{ secrets.MAIL_HOST }}\" >> $TARGET/.env
+            echo \"MAIL_USERNAME=${{ secrets.MAIL_USERNAME }}\" >> $TARGET/.env
+            echo \"MAIL_PASSWORD=${{ secrets.MAIL_PASSWORD }}\" >> $TARGET/.env
+            
             # Confirm environment variables are set
-            echo 'DB_CONN_URI: $DB_CONN_URI'
-            echo 'PORT: $PORT'
+            cat $TARGET/.env
             
             # Call sync.sh
-            bash /home/ubuntu/node-api/deploy/sync.sh
+            bash $TARGET/deploy/sync.sh
           "
