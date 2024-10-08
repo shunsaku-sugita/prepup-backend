@@ -6,7 +6,7 @@ source ~/.nvm/nvm.sh
 
 echo "Starting deployment process"
 
-ecoho "mongo"
+echo "MONGO DB CONNECTION STRING"
 echo "DB_CONN_STRING=$DB_CONN_STRING"
 
 # Create or overwrite .env file and add environment variables
