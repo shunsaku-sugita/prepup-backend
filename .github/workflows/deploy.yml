@@ -26,8 +26,7 @@ jobs:
         run: |
           echo "$SSH_PRIVATE_KEY" > private_key && chmod 600 private_key
           ssh -o StrictHostKeyChecking=no -i private_key ${REMOTE_USER}@${HOST_NAME} "
-            echo "Exporting environment variables"
-            echo "DB_CONN_URI: ${DB_CONN_URI}"
+            echo 'Exporting environment variables'
             export PORT=$PORT
             export TOKEN_KEY=$TOKEN_KEY
             export DB_CONN_URI=$DB_CONN_URI
@@ -36,5 +35,11 @@ jobs:
             export MAIL_HOST=$MAIL_HOST
             export MAIL_USERNAME=$MAIL_USERNAME
             export MAIL_PASSWORD=$MAIL_PASSWORD
+    
+            # Confirm environment variables are set
+            echo 'DB_CONN_URI: $DB_CONN_URI'
+            echo 'PORT: $PORT'
+            
+            # Call sync.sh
             bash /home/ubuntu/node-api/deploy/sync.sh
           "
