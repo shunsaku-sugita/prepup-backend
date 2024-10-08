@@ -30,7 +30,6 @@ jobs:
             touch $TARGET/.env
 
             # Write environment variables to .env file
-            echo \"DB_CONN_STRING=\${DB_CONN_STRING}\" >> $TARGET/.env
             echo "PORT=$PORT" >> $TARGET/.env
             echo "USERS_COLLECTION_NAME=$USERS_COLLECTION_NAME" >> $TARGET/.env
             echo "MAIL_HOST=$MAIL_HOST" >> $TARGET/.env
