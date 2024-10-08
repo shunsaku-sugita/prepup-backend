@@ -30,16 +30,14 @@ jobs:
             touch $TARGET/.env
 
             # Write environment variables to .env file
-            echo "PORT=$PORT" >> $TARGET/.env
-            echo "USERS_COLLECTION_NAME=$USERS_COLLECTION_NAME" >> $TARGET/.env
-            echo "MAIL_HOST=$MAIL_HOST" >> $TARGET/.env
-            echo "MAIL_USERNAME=$MAIL_USERNAME" >> $TARGET/.env
-            echo "MAIL_PASSWORD=$MAIL_PASSWORD" >> $TARGET/.env
-            echo "DB_CONN_STRING=$DB_CONN_STRING" >> $TARGET/.env
-            echo "TOKEN_KEY=$TOKEN_KEY" >> $TARGET/.env
-            echo "DB_CONN_STRING=$DB_CONN_STRING" >> $TARGET/.env
-            echo "DB_NAME=$DB_NAME" >> $TARGET/.env
-            echo "DB_CONN_STRING=$DB_CONN_STRING" >> $TARGET/.env
+            echo 'PORT=$PORT' >> $TARGET/.env
+            echo 'USERS_COLLECTION_NAME=$USERS_COLLECTION_NAME' >> $TARGET/.env
+            echo 'MAIL_HOST=$MAIL_HOST' >> $TARGET/.env
+            echo 'MAIL_USERNAME=$MAIL_USERNAME' >> $TARGET/.env
+            echo 'MAIL_PASSWORD=$MAIL_PASSWORD' >> $TARGET/.env
+            echo 'DB_CONN_STRING=$DB_CONN_STRING' >> $TARGET/.env
+            echo 'TOKEN_KEY=$TOKEN_KEY' >> $TARGET/.env
+            echo 'DB_NAME=$DB_NAME' >> $TARGET/.env
             
             # Confirm environment variables are set
             cat $TARGET/.env
