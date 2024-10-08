@@ -14,7 +14,7 @@ jobs:
       TARGET: ${{secrets.TARGET_DIR}}
       PORT: ${{secrets.PORT}}
       TOKEN_KEY: ${{secrets.TOKEN_KEY}}
-      DB_CONN_STRING: ${{secrets.DB_CONN_STRING}}
+      DB_CONN_URI: ${{secrets.DB_CONN_STRING}}
       DB_NAME: ${{secrets.DB_NAME}}
       USERS_COLLECTION_NAME: ${{secrets.USERS_COLLECTION_NAME}}
       MAIL_HOST: ${{secrets.MAIL_HOST}}
@@ -27,10 +27,10 @@ jobs:
           echo "$SSH_PRIVATE_KEY" > private_key && chmod 600 private_key
           ssh -o StrictHostKeyChecking=no -i private_key ${REMOTE_USER}@${HOST_NAME} "
             echo "Exporting environment variables"
-            echo "DB_CONN_STRING: ${DB_CONN_STRING}"
+            echo "DB_CONN_URI: ${DB_CONN_URI}"
             export PORT=$PORT
             export TOKEN_KEY=$TOKEN_KEY
-            export DB_CONN_STRING=$DB_CONN_STRING
+            export DB_CONN_URI=$DB_CONN_URI
             export DB_NAME=$DB_NAME
             export USERS_COLLECTION_NAME=$USERS_COLLECTION_NAME
             export MAIL_HOST=$MAIL_HOST
