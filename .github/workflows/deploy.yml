@@ -26,11 +26,14 @@ jobs:
         run: |
           echo "$SSH_PRIVATE_KEY" > private_key && chmod 600 private_key
           ssh -o StrictHostKeyChecking=no -i private_key ${REMOTE_USER}@${HOST_NAME} "
-            # Create .env file and add environment variables
+            # Create .env file if it doesn't exist
+            touch $TARGET/.env
+
+            # Write environment variables to .env file
             echo "DB_CONN_STRING=${{ secrets.DB_CONN_STRING }}" >> $TARGET/.env
             echo "PORT=${{ secrets.PORT }}" >> $TARGET/.env
             echo "TOKEN_KEY=${{ secrets.TOKEN_KEY }}" >> $TARGET/.env
-            echo "DB_NAME=${{ secrets.DB_NAME }}" >> $TARGET/.env
+            echo "DB_NAME=${{ secrets.DB_NAME }}}" >> $TARGET/.env
             echo "USERS_COLLECTION_NAME=${{ secrets.USERS_COLLECTION_NAME }}" >> $TARGET/.env
             echo "MAIL_HOST=${{ secrets.MAIL_HOST }}" >> $TARGET/.env
             echo "MAIL_USERNAME=${{ secrets.MAIL_USERNAME }}" >> $TARGET/.env
