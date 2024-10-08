@@ -14,7 +14,7 @@ jobs:
       TARGET: ${{secrets.TARGET_DIR}}
       PORT: ${{secrets.PORT}}
       TOKEN_KEY: ${{secrets.TOKEN_KEY}}
-      DB_CONN_URI: ${{secrets.MAIL_HOST}}
+      DB_CONN_URI: ${{secrets.DB_CONN_STRING}}
       DB_NAME: ${{secrets.DB_NAME}}
       USERS_COLLECTION_NAME: ${{secrets.USERS_COLLECTION_NAME}}
       MAIL_HOST: ${{secrets.MAIL_HOST}}
