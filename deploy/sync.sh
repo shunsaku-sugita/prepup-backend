@@ -6,12 +6,6 @@ source ~/.nvm/nvm.sh
 
 echo "Starting deployment process"
 
-echo "testing env"
-echo "PORT: $PORT"
-
-echo "Environment variables:"
-printenv
-
 # Download new version of the application
 cd /home/ubuntu/node-api || { echo "Failed to change directory"; exit 1; }
 
