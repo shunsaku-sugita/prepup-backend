@@ -6,13 +6,16 @@ source ~/.nvm/nvm.sh
 
 echo "Starting deployment process"
 
+echo "Checking for DB URI ============> "
+echo "DB_CONN_URI: ${DB_CONN_URI}"
+
 # Create or overwrite .env file and add environment variables
 ENV_FILE="/home/ubuntu/node-api/.env"
 echo "Creating .env file with environment variables..."
 {
     echo "PORT=$PORT"
     echo "TOKEN_KEY=$TOKEN_KEY"
-    echo "DB_CONN_STRING=$DB_CONN_STRING"
+    echo "DB_CONN_STRING=$DB_CONN_URI"
     echo "DB_NAME=$DB_NAME"
     echo "USERS_COLLECTION_NAME=$USERS_COLLECTION_NAME"
     echo "MAIL_HOST=$MAIL_HOST"
