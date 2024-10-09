@@ -1,5 +1,5 @@
 
-import User, { IUser } from "../models/users";
+import User, { IUser } from "../models/user";
 import { HydratedDocument } from 'mongoose';
 import { createSecretToken } from "../utils/SecretToken";
 import bcrypt from "bcryptjs"

@@ -1,5 +1,6 @@
 import { Schema, model, Document, CallbackError, Types } from "mongoose";
 import bcrypt from "bcryptjs";
+import { IInterviewQuestions, interviewQuestionsSchema } from "./interviewQuestions";
 
 export interface IUser extends Document {
   organization: Types.ObjectId;
@@ -13,6 +14,8 @@ export interface IUser extends Document {
   token: string;
   resetPasswordExpires: Date;
   otp : string;
+  occupation: string;
+  interviewQuestions:Array<IInterviewQuestions>;
 }
 
 const userSchema = new Schema<IUser>({
@@ -46,6 +49,10 @@ const userSchema = new Schema<IUser>({
     type: Boolean,
     default: false, // Default value is false
   },
+  occupation: {
+    type: String,
+  },
+  interviewQuestions: [interviewQuestionsSchema],
   token: String, // Field to store the reset token
   resetPasswordExpires: Date, // Field to store the token expiration time
   otp: String
