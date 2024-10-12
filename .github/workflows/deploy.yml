@@ -20,9 +20,6 @@ jobs:
       MAIL_HOST: ${{ secrets.MAIL_HOST }}
       MAIL_USERNAME: ${{ secrets.MAIL_USERNAME }}
       MAIL_PASSWORD: ${{ secrets.MAIL_PASSWORD }}
-      CHATGPT_API_URL: ${{secrets.CHATGPT_API_URL}}
-      CHATGPT_API_KEY: ${{secrets.CHATGPT_API_KEY}}
-      GPT_MODEL: ${{secrets.GPT_MODEL}}
     steps:
       - uses: actions/checkout@v3
       - name: Deploying application to EC2
@@ -41,9 +38,6 @@ jobs:
             echo 'DB_CONN_STRING=$DB_CONN_STRING' >> $TARGET/.env
             echo 'TOKEN_KEY=$TOKEN_KEY' >> $TARGET/.env
             echo 'DB_NAME=$DB_NAME' >> $TARGET/.env
-            echo 'CHATGPT_API_URL=$CHATGPT_API_URL' >> $TARGET/.env
-            echo 'CHATGPT_API_KEY=$CHATGPT_API_KEY' >> $TARGET/.env
-            echo 'GPT_MODEL=$GPT_MODEL' >> $TARGET/.env
             
             # Confirm environment variables are set
             cat $TARGET/.env
