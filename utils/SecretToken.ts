@@ -3,7 +3,7 @@ import jwt from "jsonwebtoken";
 
 dotenv.config();
 
-export const createSecretToken = (userId: string): string => {
+export const createSecretToken = (userId: number): string => {
     if (!process.env.TOKEN_KEY) {
       throw new Error("TOKEN_KEY is not defined in the environment variables.");
     }

@@ -1,10 +1,11 @@
 import { Schema, model, Document, CallbackError, Types } from "mongoose";
 import bcrypt from "bcryptjs";
+import { IInterviewCategory, InterviewCategorySchema } from "./interviewCategory";
 
 export interface IUser extends Document {
   organization: Types.ObjectId;
-  firstName: string;
-  lastName: string;
+  givenName: string;
+  familyName: string;
   email: string;
   password: string;
   createdAt: Date;
@@ -13,6 +14,8 @@ export interface IUser extends Document {
   token: string;
   resetPasswordExpires: Date;
   otp : string;
+  occupation: string;
+  interviewQuestions:Array<IInterviewCategory>;
 }
 
 const userSchema = new Schema<IUser>({
@@ -21,11 +24,11 @@ const userSchema = new Schema<IUser>({
     required: [true, "Your email address is required"],
     unique: true,
   },
-  firstName: {
+  givenName: {
     type: String,
     required: [true, "Your firstName is required"],
   },
-  lastName: {
+  familyName: {
     type: String,
     required: [true, "Your lastName is required"],
   },
@@ -46,6 +49,10 @@ const userSchema = new Schema<IUser>({
     type: Boolean,
     default: false, // Default value is false
   },
+  occupation: {
+    type: String,
+  },
+  interviewQuestions: [InterviewCategorySchema],
   token: String, // Field to store the reset token
   resetPasswordExpires: Date, // Field to store the token expiration time
   otp: String
