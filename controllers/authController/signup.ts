@@ -14,11 +14,10 @@ import {
 } from "../../models/interviewQuestion";
 import { Types } from "mongoose";
 import {
-  IInterviewQuestions,
-  interviewQuestionsSchema,
-} from "../../models/interviewQuestions";
-
-const PRODUCTION_LINK = process.env.PRODUCTION_LINK;
+  IInterviewCategory,
+  InterviewCategorySchema,
+} from "../../models/interviewCategory";
+import { createSecretToken } from "../../utils/SecretToken";
 
 export const signup = async (
   req: Request,
@@ -26,14 +25,14 @@ export const signup = async (
   next: NextFunction
 ) => {
   try {
-    // console.log(req);
-    const { email, password, firstName, lastName, occupation } = req.body;
+    const { email, password, givenName, familyName } = req.body;
 
-    // Check for occupation
-    if (!occupation) {
-      return res.status(400).json({ error: "Occupation is required" });
+    if (!email || !password || !givenName || !familyName) {
+      return res.status(400).json({
+        error: "Missing required fields: email, password, givenName, familyName, and occupation are required.",
+      });
     }
-    // Check if the user already exists
+    
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.status(400).send(`User already exists`);
@@ -42,84 +41,21 @@ export const signup = async (
     const user: HydratedDocument<IUser> = await User.create({
       email,
       password,
-      firstName,
-      lastName,
-      occupation,
+      givenName,
+      familyName
     });
-    // const token = createSecretToken(user._id as string);
-    // user.token = token;
 
-    try {
-      const responseContent = await generateInterviewQuestions(occupation);
-      const questionStrings: string[] = JSON.parse(
-        responseContent.choices[0].message.content
-      );
 
-      // Initialize an array to hold the interview questions
-      const interviewQuestions: Array<IInterviewQuestion> = [];
 
-      const interviewQuestionModel = mongoose.model<IInterviewQuestion>(
-        "interviewQuestion",
-        interviewQuestionSchema
-      );
-      // Loop through the questionStrings array and create interview question objects
-      for (let i = 0; i < questionStrings.length; i++) {
-        const question: IInterviewQuestion = new interviewQuestionModel({
-          question: questionStrings[i],
-          audio: "",
-          transcript: "",
-          answer: "",
-        });
-
-        interviewQuestions.push(question);
-      }
-
-      const interviewQuestionsModel = mongoose.model<IInterviewQuestions>(
-        "interviewQuestions",
-        interviewQuestionsSchema
-      );
-      // Add the new set of interview questions to the user's interviewQuestions array
-      user.interviewQuestions.push(
-        new interviewQuestionsModel({
-          categoryName: "General Interview",
-          questions: interviewQuestions,
-          badge: "General Badge",
-          score: [],
-        })
-      );
-    } catch (error) {
-      res.status(500).json({ error: "Failed to register user" });
-      console.error(
-        "Error while generating question from occupation, Error : " + error
-      );
-    }
-
-    user.otp = generateSecureOTP();
     await user.save();
 
-    const from: string = "no-replay@prepup.com";
-    const to: string = email;
-    const subject: string = "PreUp account verification";
-    const mailTemplate: string = `<div style="text-align: center;"> <br>Paste this verification code into PrepUp to verify account</br> <h1><b>${user.otp}</b></h1> </div>`;
-
-    try {
-      // await sendMail(from, to, subject, mailTemplate);
-      if (user._id) {
-        return res.status(201).json({
-          message: "OTP sent for registration successfully",
-          userId: user._id,
-        });
-      } else {
-        throw "er";
-      }
-    } catch (error) {
-      res.status(500).json({ error: "Failed to register user" });
-      console.error(
-        "Error while sending mail for user registration, Error : " + error
-      );
-    }
+    const token = createSecretToken(user._id as number);
+    return res.status(201).json({
+      message: "User registered successfully",
+      authorization: token,
+    });
   } catch (error) {
-    res.status(400).json({ error: "Failed to register user" });
+    res.status(500).json({ error: "Failed to register user" });
 
     console.error("Failed to signup user ====>");
     console.log("Request body:", req.body);

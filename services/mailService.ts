@@ -4,6 +4,20 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
+// How to use it 
+// const email : Add your customer email here
+// const from: string = "no-replay@prepup.com";
+// const to: string = email;
+// const subject: string = "PreUp account verification";
+// const mailTemplate: string = `<div style="text-align: center;"> <br>Paste this verification code into PrepUp to verify account</br> <h1><b>${user.otp}</b></h1> </div>`;
+
+// try {
+//   await sendMail(from, to, subject, mailTemplate);
+    
+// } catch (error) {
+    
+// }
+
 const logger = winston.createLogger({
     level: 'info',  // Change to 'debug' during development if needed
     format: winston.format.json(),

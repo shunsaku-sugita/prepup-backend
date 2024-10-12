@@ -6,10 +6,16 @@ import dotenv from "dotenv";
 dotenv.config();
 
 export interface CustomRequest extends Request {
-  token: string | JwtPayload;
+  token: DecodedToken;
  }
 
-const userVerification = async (
+export interface DecodedToken {
+  userId : string;
+  iat : number;
+  exp : number;
+}
+
+ export const userVerification = async (
   req: Request,
   res: Response,
   next: NextFunction
@@ -26,9 +32,7 @@ const userVerification = async (
       process.env.TOKEN_KEY || ""
     ); 
 
-    (req as CustomRequest).token = decodedToken;
-
-    console.log("What is the token : ===========> " + decodedToken);
+    (req as CustomRequest).token = decodedToken as DecodedToken;
 
     next();
   } catch (error) {
@@ -36,7 +40,5 @@ const userVerification = async (
     res.status(401).json({ error: "Invalid token" });
   }
 };
-
-module.exports = userVerification;
 
 

@@ -5,6 +5,8 @@ import * as mongoDB from "mongodb";
 import { error } from "console";
 import authRoute from "../routes/authRoute";
 import mongoose from 'mongoose';
+import interviewRoute from "../routes/interviewRoute";
+import profileRoute from "../routes/profileRoute";
 
 dotenv.config();
 
@@ -31,6 +33,8 @@ mongoose.connect(mongoUri)
 });
 //--------------------------End of mongoDB database Connection-------------------------
 
+
+//------------------------------Starting Server-----------------------------------------
 app.get("/", (req: Request, res: Response) => {
   res.send("Express + TypeScript Server");
 });
@@ -38,5 +42,10 @@ app.get("/", (req: Request, res: Response) => {
 app.listen(port, () => {
   console.log(`[server]: Server is running at http://localhost:${port}`);
 });
+//--------------------------End Of Starting Server--------------------------------------
 
+
+// --------------------------------Available Routes--------------------------------------
 app.use("/api/auth", authRoute);
+app.use("/api/interview", interviewRoute);
+app.use("/api/profile", profileRoute )
