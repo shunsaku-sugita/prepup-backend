@@ -3,10 +3,13 @@ import dotenv from "dotenv";
 import cors from "cors";
 import * as mongoDB from "mongodb";
 import { error } from "console";
-import authRoute from "../routes/authRoute";
 import mongoose from 'mongoose';
-import interviewRoute from "../routes/interviewRoute";
-import profileRoute from "../routes/profileRoute";
+import authRoute from "./routes/authRoute";
+import interviewRoute from "./routes/interviewRoute";
+import profileRoute from "./routes/profileRoute";
+import swaggerUi from 'swagger-ui-express';
+import { swaggerSpecs } from "../swagger";
+
 
 dotenv.config();
 
@@ -44,6 +47,8 @@ app.listen(port, () => {
 });
 //--------------------------End Of Starting Server--------------------------------------
 
+//-------------------------------API Documentation--------------------------------------
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpecs));
 
 // --------------------------------Available Routes--------------------------------------
 app.use("/api/auth", authRoute);
