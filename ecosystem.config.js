@@ -22,6 +22,9 @@ module.exports = {
         MAIL_HOST: process.env.MAIL_HOST || 'your-mail-host',
         MAIL_USERNAME: process.env.MAIL_USERNAME || 'your-mail-username',
         MAIL_PASSWORD: process.env.MAIL_PASSWORD || 'your-mail-password',
+        CHATGPT_API_URL: process.env.CHATGPT_API_URL,
+        CHATGPT_API_KEY: process.env.CHATGPT_API_KEY,
+        GPT_MODEL: process.env.GPT_MODEL
       },
       post_start: function() {
         console.log(`App ${this.name} is now running on port ${process.env.PORT}`);
