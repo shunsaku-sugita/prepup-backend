@@ -3,13 +3,13 @@ import dotenv from "dotenv";
 import cors from "cors";
 import * as mongoDB from "mongodb";
 import { error } from "console";
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 import authRoute from "./routes/authRoute";
 import interviewRoute from "./routes/interviewRoute";
 import profileRoute from "./routes/profileRoute";
-import swaggerUi from 'swagger-ui-express';
+import jobFinderRoute from "./routes/jobFinderRoute";
+import swaggerUi from "swagger-ui-express";
 import { swaggerSpecs } from "../swagger";
-
 
 dotenv.config();
 
@@ -23,19 +23,18 @@ app.use(express.urlencoded({ extended: true }));
 
 //------------------------Connect to mongoDb Database--------------------------------
 
-
 const mongoUri = process.env.DB_CONN_STRING || "";
 
 // Connect to MongoDB
-mongoose.connect(mongoUri)
-.then(() => {
-  console.log('Connected to MongoDB successfully');
-})
-.catch((err) => {
-  console.error('Error connecting to MongoDB:', err.message);
-});
+mongoose
+  .connect(mongoUri)
+  .then(() => {
+    console.log("Connected to MongoDB successfully");
+  })
+  .catch((err) => {
+    console.error("Error connecting to MongoDB:", err.message);
+  });
 //--------------------------End of mongoDB database Connection-------------------------
-
 
 //------------------------------Starting Server-----------------------------------------
 app.get("/", (req: Request, res: Response) => {
@@ -48,9 +47,10 @@ app.listen(port, () => {
 //--------------------------End Of Starting Server--------------------------------------
 
 //-------------------------------API Documentation--------------------------------------
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpecs));
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpecs));
 
 // --------------------------------Available Routes--------------------------------------
 app.use("/api/auth", authRoute);
 app.use("/api/interview", interviewRoute);
-app.use("/api/profile", profileRoute )
+app.use("/api/profile", profileRoute);
+app.use("/api/jobFinder", jobFinderRoute);
