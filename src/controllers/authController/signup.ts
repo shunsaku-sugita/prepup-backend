@@ -7,7 +7,7 @@ import { Request, Response, NextFunction } from "express";
 import { randomBytes } from "crypto";
 import User, { IUser } from "../../models/user";
 import { sendMail } from "../../services/mailService";
-import { generateInterviewQuestions } from "../../services/chatGpt/getOccupationQuestions";
+import { questionsByOccupation } from "../../services/chatGpt/getQuestions";
 import {
   IInterviewQuestion,
   interviewQuestionSchema,
@@ -18,6 +18,7 @@ import {
   InterviewCategorySchema,
 } from "../../models/interviewCategory";
 import { createSecretToken } from "../../utils/SecretToken";
+import { behavioralQuestions, generalQuestions } from "./defaultCategory";
 
 export const signup = async (
   req: Request,
@@ -45,7 +46,8 @@ export const signup = async (
       familyName
     });
 
-
+    await saveQuestionsToDatabase(user, generalQuestions, "General");
+    await saveQuestionsToDatabase(user, behavioralQuestions, "Behavioral");
 
     await user.save();
 
@@ -70,18 +72,68 @@ export const signup = async (
   next();
 };
 
-/**
- * Generates a secure random OTP.
- * @param length - The desired length of the OTP (default is 6).
- * @returns The generated OTP as a string.
- */
-function generateSecureOTP(length: number = 6): string {
-  // Generate random bytes
-  const bytes = randomBytes(length);
+// /**
+//  * Generates a secure random OTP.
+//  * @param length - The desired length of the OTP (default is 6).
+//  * @returns The generated OTP as a string.
+//  */
+// function generateSecureOTP(length: number = 6): string {
+//   // Generate random bytes
+//   const bytes = randomBytes(length);
 
-  // Convert to a number and mod by 10^length to get a number within the desired range
-  const otp = parseInt(bytes.toString("hex"), 16) % 10 ** length;
+//   // Convert to a number and mod by 10^length to get a number within the desired range
+//   const otp = parseInt(bytes.toString("hex"), 16) % 10 ** length;
 
-  // Return OTP padded with zeros to ensure it's the correct length
-  return otp.toString().padStart(length, "0");
+//   // Return OTP padded with zeros to ensure it's the correct length
+//   return otp.toString().padStart(length, "0");
+// }
+
+async function saveQuestionsToDatabase(
+  user: IUser,
+  questionStrings: string[],
+  categoryName: string
+) {
+  try {
+
+    const interviewQuestions: Array<IInterviewQuestion> = [];
+
+    const interviewQuestionModel = mongoose.model<IInterviewQuestion>(
+      "interviewQuestion",
+      interviewQuestionSchema
+    );
+
+    questionStrings.forEach((questionString, index) => {
+      const question: IInterviewQuestion = new interviewQuestionModel({
+        question: questionString,
+        audio: "",
+        transcript: "",
+        answer: "",
+        _id: index,
+      });
+
+      interviewQuestions.push(question);
+    });
+
+    const interviewQuestionsModel = mongoose.model<IInterviewCategory>(
+      "interviewQuestions",
+      InterviewCategorySchema
+    );
+
+    const totalQuestions = user.interviewQuestions.length;
+
+    user.interviewQuestions.push(
+      new interviewQuestionsModel({
+        categoryName: categoryName,
+        questions: interviewQuestions,
+        badge: "",
+        score: [],
+        _id: totalQuestions,
+      })
+    );
+
+    return true;
+  } catch (error) {
+    console.error("Error while saving questions for category : " + categoryName + " Error " +error);
+    return false;
+  }
 }

@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { CustomRequest } from "../../middlewares/authMiddleware";
 import User, { IUser } from "../../models/user";
-import { generateInterviewQuestions } from "../../services/chatGpt/getOccupationQuestions";
+import { questionsByOccupation } from "../../services/chatGpt/getQuestions";
 import {
   IInterviewQuestion,
   interviewQuestionSchema,
@@ -95,9 +95,8 @@ const filterUpdateFields = (
 };
 
 const generateQuestionOnOccupation = (occupation: string, user: IUser) => {
-  generateInterviewQuestions(occupation)
+  questionsByOccupation(occupation)
     .then((responseContent) => {
-      
       const questionStrings: string[] = JSON.parse(
         responseContent.choices[0].message.content
       );
@@ -115,7 +114,7 @@ const generateQuestionOnOccupation = (occupation: string, user: IUser) => {
           audio: "",
           transcript: "",
           answer: "",
-          _id:index
+          _id: index,
         });
 
         interviewQuestions.push(question);
@@ -126,24 +125,24 @@ const generateQuestionOnOccupation = (occupation: string, user: IUser) => {
         InterviewCategorySchema
       );
 
-      if (user.interviewQuestions.length > 0) {
-        user.interviewQuestions[0] = new interviewQuestionsModel({
-          categoryName: occupation,
-          questions: interviewQuestions,
-          badge: "",
-          score: [],
-          _id:0
-        });
-      } else {
+      if (user.interviewQuestions[0].categoryName == "General") {
         user.interviewQuestions.unshift(
           new interviewQuestionsModel({
             categoryName: occupation,
             questions: interviewQuestions,
             badge: "",
             score: [],
-            _id:0
+            _id: 0,
           })
         );
+      } else {
+        user.interviewQuestions[0] = new interviewQuestionsModel({
+          categoryName: occupation,
+          questions: interviewQuestions,
+          badge: "",
+          score: [],
+          _id: 0,
+        });
       }
       return user.save();
     })
