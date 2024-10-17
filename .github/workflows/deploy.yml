@@ -23,6 +23,9 @@ jobs:
       CHATGPT_API_URL: ${{secrets.CHATGPT_API_URL}}
       CHATGPT_API_KEY: ${{secrets.CHATGPT_API_KEY}}
       GPT_MODEL: ${{secrets.GPT_MODEL}}
+      ADZUNA_API_URL: ${{secrets.ADZUNA_API_URL}}
+      ADZUNA_API_ID: ${{secrets.ADZUNA_API_ID}}
+      ADZUNA_API_KEY: ${{secrets.ADZUNA_API_KEY}}
     steps:
       - uses: actions/checkout@v3
       - name: Deploying application to EC2
@@ -43,6 +46,9 @@ jobs:
             echo 'CHATGPT_API_URL=$CHATGPT_API_URL' >> $TARGET/.env
             echo 'CHATGPT_API_KEY=$CHATGPT_API_KEY' >> $TARGET/.env
             echo 'GPT_MODEL=$GPT_MODEL' >> $TARGET/.env
+            echo 'ADZUNA_API_URL=$ADZUNA_API_URL' >> $TARGET/.env
+            echo 'ADZUNA_API_ID=$ADZUNA_API_ID' >> $TARGET/.env
+            echo 'ADZUNA_API_KEY=$ADZUNA_API_KEY' >> $TARGET/.env
             # Confirm environment variables are set
             cat $TARGET/.env
             # Call sync.sh
