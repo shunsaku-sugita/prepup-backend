@@ -2,6 +2,8 @@
 import { Router } from "express";
 import { category } from "../controllers/interviewController/category";
 import { userVerification } from "../middlewares/authMiddleware";
+import { generateQuestions } from "../controllers/interviewController/generateQuestions";
+
 
 const interviewRoute = Router();
 
@@ -108,5 +110,6 @@ const interviewRoute = Router();
  *                   example: "Failed to retrieve interview category"
  */
 interviewRoute.get('/category', userVerification, category);
+interviewRoute.post('/generate-questions', userVerification, generateQuestions)
 
 export default interviewRoute;

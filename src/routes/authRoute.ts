@@ -10,6 +10,24 @@ const authRoute = Router();
  *     summary: Register a new user
  *     tags:
  *       - Authentication
+ *     consumes:
+ *       - application/json
+ *     parameters:
+ *       - in: body
+ *         name: user
+ *         description: The user to create.
+ *         schema:
+ *           type: object
+ *           required: true
+ *           properties:
+ *             email:
+ *               type: string
+ *             password:
+ *               type: string
+ *             givenName:
+ *               type: string
+ *             familyName:
+ *               type: string
  *     requestBody:
  *       required: true
  *       content:
