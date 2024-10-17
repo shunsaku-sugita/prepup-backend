@@ -10,6 +10,8 @@ import profileRoute from "./routes/profileRoute";
 import swaggerUi from "swagger-ui-express";
 import { swaggerSpecs } from "../swagger";
 import { initSocket } from "./socket";  
+import jobFinderRoute from "./routes/jobFinderRoute";
+
 dotenv.config();
 
 const app: Express = express();
@@ -52,3 +54,4 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpecs));
 app.use("/api/auth", authRoute);
 app.use("/api/interview", interviewRoute);
 app.use("/api/profile", profileRoute);
+app.use("/api/jobFinder", jobFinderRoute);
