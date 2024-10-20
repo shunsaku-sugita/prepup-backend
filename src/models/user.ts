@@ -1,6 +1,9 @@
 import { Schema, model, Document, CallbackError, Types } from "mongoose";
 import bcrypt from "bcryptjs";
-import { IInterviewCategory, InterviewCategorySchema } from "./interviewCategory";
+import {
+  IInterviewCategory,
+  InterviewCategorySchema,
+} from "./interviewCategory";
 
 export interface IUser extends Document {
   organization: Types.ObjectId;
@@ -13,9 +16,10 @@ export interface IUser extends Document {
   verified: boolean;
   token: string;
   resetPasswordExpires: Date;
-  otp : string;
+  otp: string;
   occupation: string;
-  interviewQuestions:Array<IInterviewCategory>;
+  interviewQuestions: Array<IInterviewCategory>;
+  savedJobs: Array<string>;
 }
 
 const userSchema = new Schema<IUser>({
@@ -53,9 +57,41 @@ const userSchema = new Schema<IUser>({
     type: String,
   },
   interviewQuestions: [InterviewCategorySchema],
+  savedJobs: [
+    {
+      jobId: {
+        type: String,
+        required: true,
+      },
+      title: {
+        type: String,
+        required: true,
+      },
+      company: {
+        type: String,
+        required: true,
+      },
+      companyInitial: {
+        type: String,
+        required: true,
+      },
+      description: {
+        type: String,
+        required: true,
+      },
+      createdDate: {
+        type: String,
+        required: true,
+      },
+      url: {
+        type: String,
+        required: true,
+      },
+    },
+  ],
   token: String, // Field to store the reset token
   resetPasswordExpires: Date, // Field to store the token expiration time
-  otp: String
+  otp: String,
 });
 
 // Pre-save hook to hash the password
