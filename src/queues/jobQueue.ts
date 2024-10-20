@@ -59,8 +59,13 @@ const jobWorker = new Worker(
       );
     }
 
-    getSocket().to(jobId).emit(jobId, { status: "Job processing complete!", statusCode:200, data:questions });
-
+    getSocket()
+      .to(jobId)
+      .emit(jobId, {
+        status: "Job processing complete!",
+        statusCode: 200,
+        data: questions,
+      });
   },
   { connection }
 );
