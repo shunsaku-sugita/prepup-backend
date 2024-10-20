@@ -22,8 +22,17 @@ export const analyzeAnswers = async (
     const parsedData = JSON.parse(data.choices[0].message.content);
     const scores = parsedData.scores;
 
+    const averageScore =
+      (scores.speaking +
+        scores.confidence +
+        scores.clarity +
+        scores.conciseness) /
+      4;
+    const badge = getBadge(averageScore);
+
     return res.status(200).json({
       scores,
+      badge,
     });
   } catch (error) {
     res.status(400).json({ error: "Failed to generate questions" });
@@ -40,3 +49,13 @@ export const analyzeAnswers = async (
 
   next();
 };
+
+function getBadge(average: number) {
+  if (average >= 85) {
+    return "Gold";
+  } else if (average >= 70) {
+    return "Silver";
+  } else {
+    return "Bronze";
+  }
+}
