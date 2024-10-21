@@ -1,5 +1,8 @@
 import { Router } from "express";
-import { category } from "../controllers/interviewController/category";
+import {
+  category,
+  createCategory,
+} from "../controllers/interviewController/category";
 import { userVerification } from "../middlewares/authMiddleware";
 import { generateQuestions } from "../controllers/interviewController/generateQuestions";
 import { analyzeAnswers } from "../controllers/interviewController/analyzeAnswers";
@@ -111,5 +114,6 @@ const interviewRoute = Router();
 interviewRoute.get("/category", userVerification, category);
 interviewRoute.post("/generate-questions", userVerification, generateQuestions);
 interviewRoute.post("/analyze-answers", userVerification, analyzeAnswers);
+interviewRoute.post("/category", userVerification, createCategory);
 
 export default interviewRoute;
