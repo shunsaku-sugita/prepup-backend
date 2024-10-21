@@ -4,6 +4,7 @@ import User from "../../models/user";
 import axios from "axios";
 import dotenv from "dotenv";
 import { format } from "date-fns";
+import { is } from "cheerio/dist/commonjs/api/traversing";
 
 dotenv.config();
 
@@ -13,11 +14,23 @@ let jobListByKeyword: any[] = [];
 // Main job search handler function
 export const searchJobs = async (req: Request, res: Response) => {
   const page: number = parseInt(req.params.page);
+  const userId = (req as CustomRequest).token.userId;
 
   try {
+    const user = await User.findById(userId).select("savedJobs");
+    const bookmarkedJobIds = user
+      ? user.savedJobs.map((job: any) => job.jobId)
+      : [];
+
     const apiUrl = buildApiUrl(page);
     const response = await axios.get(apiUrl);
-    const jobData = response.data.results.map(formatJobDetails);
+    const jobData = response.data.results.map((job: any) => {
+      const formattedJob = formatJobDetails(job);
+      if (bookmarkedJobIds.includes(formattedJob.jobId)) {
+        formattedJob.isBookmarked = true;
+      }
+      return formattedJob;
+    });
 
     jobList = page === 1 ? jobData : jobList.concat(jobData);
 
@@ -31,6 +44,7 @@ export const searchJobs = async (req: Request, res: Response) => {
 // Job search by keyword handler function
 export const searchJobsByKeyword = async (req: Request, res: Response) => {
   const page: number = parseInt(req.params.page);
+  const userId = (req as CustomRequest).token.userId;
   const keywords = req.query.keywords as string | string[] | undefined;
 
   const keywordQuery = Array.isArray(keywords)
@@ -38,29 +52,27 @@ export const searchJobsByKeyword = async (req: Request, res: Response) => {
     : encodeURIComponent(keywords || "");
 
   try {
-    const apiUrl = `${process.env.ADZUNA_API_URL}/${page}?app_id=${process.env.ADZUNA_API_ID}&app_key=${process.env.ADZUNA_API_KEY}&results_per_page=10&sort_by=date&what=${keywordQuery}`;
+    const user = await User.findById(userId).select("savedJobs");
+    const bookmarkedJobIds = user
+      ? user.savedJobs.map((job: any) => job.jobId)
+      : [];
+
+    const apiUrl = buildApiUrl(page, keywordQuery);
     const response = await axios.get(apiUrl);
 
-    jobListByKeyword = response.data.results.map(formatJobDetails);
+    jobListByKeyword = response.data.results.map((job: any) => {
+      const formattedJob = formatJobDetails(job);
+      if (bookmarkedJobIds.includes(formattedJob.jobId)) {
+        formattedJob.isBookmarked = true;
+      }
+      return formattedJob;
+    });
 
     res.status(200).json(jobListByKeyword);
   } catch (error) {
     console.error("Error fetching jobs by keyword:", error);
     res.status(400).json({ error: "Failed to fetch jobs list" });
   }
-};
-
-// Search for a specific job by jobId
-export const searchJob = (req: Request, res: Response) => {
-  const { jobId } = req.params;
-
-  const job = jobList.find((job) => job.jobId === jobId);
-
-  if (!job) {
-    return res.status(404).json({ message: "Job not found" });
-  }
-
-  res.status(200).json(job);
 };
 
 // Bookmark a job
@@ -128,23 +140,29 @@ export const getBookmarkedJobs = async (req: Request, res: Response) => {
   }
 };
 
-// Utility function to build the API URL
-const buildApiUrl = (page: number) => {
-  return `${process.env.ADZUNA_API_URL}/${page}?app_id=${process.env.ADZUNA_API_ID}&app_key=${process.env.ADZUNA_API_KEY}&results_per_page=10&sort_by=date`;
+// Build the API URL
+const buildApiUrl = (page: number, what: string = "") => {
+  const BASE_URL = `${process.env.ADZUNA_API_URL}/${page}?app_id=${process.env.ADZUNA_API_ID}&app_key=${process.env.ADZUNA_API_KEY}&results_per_page=10&sort_by=date`;
+  return what ? `${BASE_URL}&what=${what}` : BASE_URL;
 };
 
-// Utility function to format job details
+// Format job details
 const formatJobDetails = (job: any) => ({
-  jobId: String(job.id),
-  title: String(job.title),
-  company: String(job.company.display_name),
-  companyInitial: String(job.company.display_name.charAt(0).toUpperCase()),
-  description: String(job.description),
-  createdDate: String(format(new Date(job.created), "MMMM d, yyyy")),
-  url: String(job.redirect_url),
+  jobId: job.id || Math.random().toString(36).substring(7),
+  title: String(job.title || "Job Title"),
+  company: String(job.company.display_name || "Company Name"),
+  companyInitial: job.company.display_name
+    ? job.company.display_name.charAt(0).toUpperCase()
+    : job.title.charAt(0).toUpperCase(),
+  description: String(job.description || "Job Description"),
+  createdDate: job.created
+    ? format(new Date(job.created), "dd/MM/yyyy")
+    : format(new Date(), "dd/MM/yyyy"),
+  url: String(job.redirect_url || "https://www.adzuna.co.uk/"),
+  isBookmarked: false,
 });
 
-// Utility function to extract job data from the request
+// Extract job data from the request
 const getJobDetails = (req: Request) => ({
   jobId: req.body.jobId,
   title: req.body.title,
@@ -155,7 +173,7 @@ const getJobDetails = (req: Request) => ({
   url: req.body.url,
 });
 
-// Utility function to check if the job is already bookmarked
+// Check if the job is already bookmarked
 const isJobBookmarked = async (userId: string, jobId: string) => {
   return await User.findOne({
     _id: userId,
@@ -163,7 +181,7 @@ const isJobBookmarked = async (userId: string, jobId: string) => {
   });
 };
 
-// Utility function to bookmark the job
+// Bookmark the job
 const bookmarkJobForUser = async (userId: string, jobDetails: object) => {
   return await User.findOneAndUpdate(
     { _id: userId },
@@ -172,7 +190,7 @@ const bookmarkJobForUser = async (userId: string, jobDetails: object) => {
   );
 };
 
-// Utility function to unbookmark the job
+// Unbookmark the job
 const unbookmarkJobForUser = async (userId: string, jobId: string) => {
   return await User.findOneAndUpdate(
     { _id: userId },
