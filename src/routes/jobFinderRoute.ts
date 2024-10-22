@@ -2,7 +2,6 @@ import { Router } from "express";
 import {
   searchJobs,
   searchJobsByKeyword,
-  searchJob,
   bookmarkJob,
   unbookmarkJob,
   getBookmarkedJobs,
@@ -17,7 +16,6 @@ jobFinderRoute.get(
   userVerification,
   searchJobsByKeyword
 );
-jobFinderRoute.get("/jobs/:jobId", userVerification, searchJob);
 jobFinderRoute.get("/bookmarked", userVerification, getBookmarkedJobs);
 jobFinderRoute.post("/bookmark", userVerification, bookmarkJob);
 jobFinderRoute.delete("/bookmark/:jobId", userVerification, unbookmarkJob);
