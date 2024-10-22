@@ -9,8 +9,9 @@ import interviewRoute from "./routes/interviewRoute";
 import profileRoute from "./routes/profileRoute";
 import swaggerUi from "swagger-ui-express";
 import { swaggerSpecs } from "../swagger";
-import { initSocket } from "./socket";  
+import { initSocket } from "./socket";
 import jobFinderRoute from "./routes/jobFinderRoute";
+import starMasterRoute from "./routes/starMasterRoute";
 
 dotenv.config();
 
@@ -22,7 +23,7 @@ initSocket(server);
 
 const port = process.env.PORT || 4000;
 
-app.use(cors());  
+app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -55,3 +56,4 @@ app.use("/api/auth", authRoute);
 app.use("/api/interview", interviewRoute);
 app.use("/api/profile", profileRoute);
 app.use("/api/jobFinder", jobFinderRoute);
+app.use("/api/starMaster", starMasterRoute);
