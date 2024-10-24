@@ -53,3 +53,32 @@ export const analyzeAnswersPrompt = (answers: string) => {
     temperature: 0.7,
   };
 };
+
+export const analyzeStarAnswersWithFeedback = (
+  question: string,
+  answers: any
+) => {
+  return {
+    model: process.env.GPT_MODEL,
+    messages: [
+      {
+        role: "system",
+        content:
+          "You are an AI that evaluates STAR method interview answers. Your task is to analyze the provided answers and provide feedback for each section (Situation, Task, Action, Result). Also, provide an overall score from 0 to 100, which represents the average quality of the answers.",
+      },
+      {
+        role: "user",
+        content: `Here is the question and the answers based on the STAR method.\n\nQuestion: ${question}\n\nSituation: ${answers.situation}\nTask: ${answers.task}\nAction: ${answers.action}\nResult: ${answers.result}\n\nPlease provide feedback for each section as a JSON object in the following format:\n{
+          "feedback": {
+            "situation": "string",
+            "task": "string",
+            "action": "string",
+            "result": "string",
+          },
+          "score": number
+        }\nProvide the JSON output only without any additional text.`,
+      },
+    ],
+    temperature: 0.7,
+  };
+};
