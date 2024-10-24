@@ -1,37 +1,71 @@
 import { Request, Response } from "express";
-import { CustomRequest } from "../../middlewares/authMiddleware";
-import User from "../../models/user";
-import {
-  IQuestion,
-  IStarMasterQuestionBank,
-  StarMasterQuestionBank,
-} from "../../models/starMasterQuestion";
-import axios from "axios";
 import dotenv from "dotenv";
-import { format } from "date-fns";
+import { StarMasterQuestionBank } from "../../models/starMasterQuestion";
+import { getAnswerAnalysisForStarMaster } from "../../services/chatGpt/getAnswerAnalysisForStarMaster";
 
 dotenv.config();
 
-// Fetch a question from the database randomly
-export const getQuestion = async (req: Request, res: Response) => {
+// Fetch a random question from the question bank
+export const getQuestion = async (
+  req: Request,
+  res: Response
+): Promise<Response> => {
   try {
     const questionBank = await StarMasterQuestionBank.findOne()
       .select("questions.id questions.question")
       .exec();
-    // If questions are found, return a random question
-    if (questionBank && questionBank.questions.length > 0) {
-      const randomIndex = Math.floor(
-        // Generate a random index within the range of the questions array
-        Math.random() * questionBank.questions.length
-      );
-      const randomQuestion = questionBank.questions[randomIndex];
-      return res.status(200).json(randomQuestion);
+
+    if (!questionBank || !questionBank.questions.length) {
+      return res.status(400).json({ message: "No question found" });
     }
-    return res.status(404).json({ message: "No questions found" });
+
+    const randomIndex = Math.floor(
+      Math.random() * questionBank.questions.length
+    );
+    const randomQuestion = questionBank.questions[randomIndex];
+
+    return res.status(200).json(randomQuestion);
   } catch (error) {
-    console.error("Error fetching random question:", error);
-    return res.status(500).json({ message: "Server error" });
+    logRequestDetails(req);
+    return res.status(500).json({ message: "Error fetching question" });
   }
 };
 
-export const analyzeAnswers = async (req: Request, res: Response) => {};
+// Analyze user-provided STAR method answers
+export const analyzeAnswers = async (
+  req: Request,
+  res: Response
+): Promise<Response> => {
+  const { question, answers } = req.body;
+
+  if (!question || !answers) {
+    return res.status(400).json({ error: "Question or answers not provided" });
+  }
+
+  try {
+    const analysisData = await getAnswerAnalysisForStarMaster({
+      question,
+      answers,
+    });
+
+    const parsedData = JSON.parse(analysisData.choices[0].message.content);
+
+    return res.status(200).json({
+      feedback: parsedData.feedback,
+      score: parsedData.score,
+    });
+  } catch (error) {
+    logRequestDetails(req);
+    return res.status(500).json({ error: "Failed to analyze answers" });
+  }
+};
+
+const logRequestDetails = (req: Request) => {
+  console.error("Error processing request ====>");
+  console.log("Request Body:", req.body);
+  console.log("Request Headers:", req.headers);
+  console.log("Request Query Params:", req.query);
+  console.log("Request URL Params:", req.params);
+  console.log("Request Method:", req.method);
+  console.log("Request URL:", req.url);
+};
