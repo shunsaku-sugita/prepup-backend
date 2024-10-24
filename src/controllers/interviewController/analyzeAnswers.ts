@@ -20,18 +20,19 @@ export const analyzeAnswers = async (
 
     const data = await getAnswerAnalysis(answers);
     const parsedData = JSON.parse(data.choices[0].message.content);
-    const scores = parsedData.scores;
+
+    const analysis = parsedData.analysis;
 
     const averageScore =
-      (scores.speaking +
-        scores.confidence +
-        scores.clarity +
-        scores.conciseness) /
+      (analysis.fluency.score +
+        analysis.confidence.score +
+        analysis.clarity.score +
+        analysis.conciseness.score) /
       4;
     const badge = getBadge(averageScore);
 
     return res.status(200).json({
-      scores,
+      analysis,
       badge,
     });
   } catch (error) {
