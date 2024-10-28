@@ -1,11 +1,11 @@
-import { Schema, model, Document, CallbackError, Types } from "mongoose";
+import mongoose, { Schema, model, Document, CallbackError, Types } from "mongoose";
 import {
   IInterviewQuestion,
   interviewQuestionSchema,
 } from "./interviewQuestion";
 
 export interface IInterviewCategory extends Types.Subdocument {
-  _id: number;
+  organization: Types.ObjectId;
   categoryName: string;
   questions: Array<IInterviewQuestion>;
   badge: string;
@@ -13,7 +13,6 @@ export interface IInterviewCategory extends Types.Subdocument {
 }
 
 export const InterviewCategorySchema = new Schema<IInterviewCategory>({
-  _id: { type: Number },
   categoryName: {
     type: String,
     required: [true, "Category name is require for the interview questions"],
@@ -22,3 +21,8 @@ export const InterviewCategorySchema = new Schema<IInterviewCategory>({
   badge: String,
   score: [String],
 });
+
+export const interviewQuestionsModel = mongoose.model<IInterviewCategory>(
+  "interviewQuestions",
+  InterviewCategorySchema
+);
