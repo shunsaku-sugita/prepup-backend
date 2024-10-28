@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { signup } from "../controllers/authController/signup";
+import { signin } from "../controllers/authController/signin";
 
 const authRoute = Router();
 
@@ -93,5 +94,6 @@ const authRoute = Router();
  *                   example: "Failed to register user"
  */
 authRoute.post("/signup", signup);
+authRoute.post("/signin", signin);
 
 export default authRoute;
