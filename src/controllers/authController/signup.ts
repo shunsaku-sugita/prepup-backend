@@ -21,6 +21,13 @@ import {
 } from "../../models/interviewCategory";
 import { createSecretToken } from "../../utils/SecretToken";
 import { behavioralQuestions, generalQuestions } from "./defaultCategory";
+import {
+  uniqueNamesGenerator,
+  Config,
+  adjectives,
+  colors,
+  animals,
+} from "unique-names-generator";
 
 export const signup = async (
   req: Request,
@@ -28,24 +35,38 @@ export const signup = async (
   next: NextFunction
 ) => {
   try {
-    const { email, password, givenName, familyName } = req.body;
+    const { email, password, givenName, familyName, userName } = req.body;
 
-    if (!email || !password || !givenName || !familyName) {
+    if (!email || !password || !givenName || !familyName || !userName) {
       return res.status(400).json({
-        error: "Missing required fields: email, password, givenName, familyName, and occupation are required.",
+        error:
+          "Missing required fields: email, password, givenName, familyName, and userName are required.",
       });
     }
-    
+
     const existingUser = await User.findOne({ email });
     if (existingUser) {
-      return res.status(400).send(`User already exists`);
+      return res
+        .status(400)
+        .json({ email: "User already registered with this email" });
+    }
+
+    const existingUserName = await User.findOne({ userName });
+    if (existingUserName) {
+      const randomName: string = uniqueNamesGenerator({
+        dictionaries: [adjectives, animals],
+      });
+      return res
+        .status(400)
+        .json({ userName: `User name already taken suggested name : ${randomName}` });
     }
 
     const user: HydratedDocument<IUser> = await User.create({
       email,
       password,
       givenName,
-      familyName
+      familyName,
+      userName
     });
 
     await saveQuestionsToDatabase(user, generalQuestions, "General");
@@ -96,7 +117,6 @@ async function saveQuestionsToDatabase(
   categoryName: string
 ) {
   try {
-
     const interviewQuestions: Array<IInterviewQuestion> = [];
 
     questionStrings.forEach((questionString, index) => {
@@ -104,7 +124,7 @@ async function saveQuestionsToDatabase(
         question: questionString,
         audio: "",
         transcript: "",
-        answer: ""
+        answer: "",
       });
 
       interviewQuestions.push(question);
@@ -117,13 +137,18 @@ async function saveQuestionsToDatabase(
         categoryName: categoryName,
         questions: interviewQuestions,
         badge: "",
-        score: []
+        score: [],
       })
     );
 
     return true;
   } catch (error) {
-    console.error("Error while saving questions for category : " + categoryName + " Error " +error);
+    console.error(
+      "Error while saving questions for category : " +
+        categoryName +
+        " Error " +
+        error
+    );
     return false;
   }
 }
