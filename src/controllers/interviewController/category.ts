@@ -75,3 +75,49 @@ export const createCategory = async (
 
   next();
 };
+
+export const deleteCategory = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { categoryId } = req.body;
+
+    if (!categoryId) {
+      return res
+        .status(400)
+        .json({ error: "categoryId is needed to delete category" });
+    }
+
+    const userId = (req as CustomRequest).token.userId;
+
+    const result = await User.updateOne(
+      { _id: userId },
+      { $pull: { interviewQuestions: { _id: categoryId } } }
+    );
+
+    if (result.modifiedCount > 0) {
+      res.status(200).json({
+        message: "Category deleted successfully.",
+      });
+    } else {
+      res.status(400).json({
+        message: "Category not found or already deleted.",
+      });
+    }
+  } catch (error) {
+
+    res.status(400).json({ error: "Failed to delete category" });
+
+    console.error("Failed to get interview category ====>");
+    console.log("Request body:", req.body);
+    console.log("Request headers:", req.headers);
+    console.log("Request query params:", req.query);
+    console.log("Request URL params:", req.params);
+    console.log("Request method:", req.method);
+    console.log("Request URL:", req.url);
+    console.error("Error: " + error);
+
+  }
+};
