@@ -10,12 +10,14 @@ import { sendMail } from "../../services/mailService";
 import { questionsByOccupation } from "../../services/chatGpt/getQuestions";
 import {
   IInterviewQuestion,
+  interviewQuestionModel,
   interviewQuestionSchema,
 } from "../../models/interviewQuestion";
 import { Types } from "mongoose";
 import {
   IInterviewCategory,
   InterviewCategorySchema,
+  interviewQuestionsModel,
 } from "../../models/interviewCategory";
 import { createSecretToken } from "../../utils/SecretToken";
 import { behavioralQuestions, generalQuestions } from "./defaultCategory";
@@ -97,27 +99,16 @@ async function saveQuestionsToDatabase(
 
     const interviewQuestions: Array<IInterviewQuestion> = [];
 
-    const interviewQuestionModel = mongoose.model<IInterviewQuestion>(
-      "interviewQuestion",
-      interviewQuestionSchema
-    );
-
     questionStrings.forEach((questionString, index) => {
       const question: IInterviewQuestion = new interviewQuestionModel({
         question: questionString,
         audio: "",
         transcript: "",
-        answer: "",
-        _id: index,
+        answer: ""
       });
 
       interviewQuestions.push(question);
     });
-
-    const interviewQuestionsModel = mongoose.model<IInterviewCategory>(
-      "interviewQuestions",
-      InterviewCategorySchema
-    );
 
     const totalQuestions = user.interviewQuestions.length;
 
@@ -126,8 +117,7 @@ async function saveQuestionsToDatabase(
         categoryName: categoryName,
         questions: interviewQuestions,
         badge: "",
-        score: [],
-        _id: totalQuestions,
+        score: []
       })
     );
 

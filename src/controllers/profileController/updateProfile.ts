@@ -4,12 +4,14 @@ import User, { IUser } from "../../models/user";
 import { questionsByOccupation } from "../../services/chatGpt/getQuestions";
 import {
   IInterviewQuestion,
+  interviewQuestionModel,
   interviewQuestionSchema,
 } from "../../models/interviewQuestion";
 import mongoose from "mongoose";
 import {
   IInterviewCategory,
   InterviewCategorySchema,
+  interviewQuestionsModel,
 } from "../../models/interviewCategory";
 
 const allowedFieldsToUpdate = [
@@ -103,27 +105,17 @@ const generateQuestionOnOccupation = (occupation: string, user: IUser) => {
 
       const interviewQuestions: Array<IInterviewQuestion> = [];
 
-      const interviewQuestionModel = mongoose.model<IInterviewQuestion>(
-        "interviewQuestion",
-        interviewQuestionSchema
-      );
-
       questionStrings.forEach((questionString, index) => {
         const question: IInterviewQuestion = new interviewQuestionModel({
           question: questionString,
           audio: "",
           transcript: "",
-          answer: "",
-          _id: index,
+          answer: ""
         });
 
         interviewQuestions.push(question);
       });
 
-      const interviewQuestionsModel = mongoose.model<IInterviewCategory>(
-        "interviewQuestions",
-        InterviewCategorySchema
-      );
 
       if (user.interviewQuestions[0].categoryName == "General") {
         user.interviewQuestions.unshift(
@@ -131,8 +123,7 @@ const generateQuestionOnOccupation = (occupation: string, user: IUser) => {
             categoryName: occupation,
             questions: interviewQuestions,
             badge: "",
-            score: [],
-            _id: 0,
+            score: []
           })
         );
       } else {
@@ -140,8 +131,7 @@ const generateQuestionOnOccupation = (occupation: string, user: IUser) => {
           categoryName: occupation,
           questions: interviewQuestions,
           badge: "",
-          score: [],
-          _id: 0,
+          score: []
         });
       }
       return user.save();
