@@ -10,7 +10,7 @@ export const getProfile = async (
   try {
     const _id = (req as CustomRequest).token.userId;
 
-    const user = await User.findById(_id).select('email givenName familyName occupation');
+    const user = await User.findById(_id).select('email givenName familyName occupation userName');
 
     if(user){
       res.status(200).json({

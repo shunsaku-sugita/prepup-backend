@@ -21,6 +21,13 @@ import {
 } from "../../models/interviewCategory";
 import { createSecretToken } from "../../utils/SecretToken";
 import { behavioralQuestions, generalQuestions } from "./defaultCategory";
+import {
+  uniqueNamesGenerator,
+  Config,
+  adjectives,
+  colors,
+  animals,
+} from "unique-names-generator";
 
 export const signup = async (
   req: Request,
@@ -28,24 +35,38 @@ export const signup = async (
   next: NextFunction
 ) => {
   try {
-    const { email, password, givenName, familyName } = req.body;
+    const { email, password, givenName, familyName, userName } = req.body;
 
-    if (!email || !password || !givenName || !familyName) {
+    if (!email || !password || !givenName || !familyName || !userName) {
       return res.status(400).json({
-        error: "Missing required fields: email, password, givenName, familyName, and occupation are required.",
+        error:
+          "Missing required fields: email, password, givenName, familyName, and userName are required.",
       });
     }
-    
+
     const existingUser = await User.findOne({ email });
     if (existingUser) {
-      return res.status(400).send(`User already exists`);
+      return res
+        .status(400)
+        .json({ email: "User already registered with this email" });
+    }
+
+    const existingUserName = await User.findOne({ userName });
+    if (existingUserName) {
+      const randomName: string = uniqueNamesGenerator({
+        dictionaries: [adjectives, animals],
+      });
+      return res
+        .status(400)
+        .json({ userName: `User name already taken suggested name : ${randomName}` });
     }
 
     const user: HydratedDocument<IUser> = await User.create({
       email,
       password,
       givenName,
-      familyName
+      familyName,
+      userName
     });
 
     await saveQuestionsToDatabase(user, generalQuestions, "General");
@@ -74,21 +95,7 @@ export const signup = async (
   next();
 };
 
-// /**
-//  * Generates a secure random OTP.
-//  * @param length - The desired length of the OTP (default is 6).
-//  * @returns The generated OTP as a string.
-//  */
-// function generateSecureOTP(length: number = 6): string {
-//   // Generate random bytes
-//   const bytes = randomBytes(length);
 
-//   // Convert to a number and mod by 10^length to get a number within the desired range
-//   const otp = parseInt(bytes.toString("hex"), 16) % 10 ** length;
-
-//   // Return OTP padded with zeros to ensure it's the correct length
-//   return otp.toString().padStart(length, "0");
-// }
 
 async function saveQuestionsToDatabase(
   user: IUser,
@@ -96,7 +103,6 @@ async function saveQuestionsToDatabase(
   categoryName: string
 ) {
   try {
-
     const interviewQuestions: Array<IInterviewQuestion> = [];
 
     questionStrings.forEach((questionString, index) => {
@@ -104,7 +110,7 @@ async function saveQuestionsToDatabase(
         question: questionString,
         audio: "",
         transcript: "",
-        answer: ""
+        answer: "",
       });
 
       interviewQuestions.push(question);
@@ -117,13 +123,18 @@ async function saveQuestionsToDatabase(
         categoryName: categoryName,
         questions: interviewQuestions,
         badge: "",
-        score: []
+        score: [],
       })
     );
 
     return true;
   } catch (error) {
-    console.error("Error while saving questions for category : " + categoryName + " Error " +error);
+    console.error(
+      "Error while saving questions for category : " +
+        categoryName +
+        " Error " +
+        error
+    );
     return false;
   }
 }

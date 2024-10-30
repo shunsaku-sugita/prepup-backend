@@ -2,6 +2,7 @@ import { Router } from "express";
 import {
   category,
   createCategory,
+  deleteCategory,
 } from "../controllers/interviewController/category";
 import { userVerification } from "../middlewares/authMiddleware";
 import { generateQuestions } from "../controllers/interviewController/generateQuestions";
@@ -115,5 +116,6 @@ interviewRoute.get("/category", userVerification, category);
 interviewRoute.post("/generate-questions", userVerification, generateQuestions);
 interviewRoute.post("/analyze-answers", userVerification, analyzeAnswers);
 interviewRoute.post("/category", userVerification, createCategory);
+interviewRoute.delete("/category", userVerification, deleteCategory);
 
 export default interviewRoute;
