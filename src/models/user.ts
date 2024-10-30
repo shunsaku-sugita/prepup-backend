@@ -10,6 +10,7 @@ export interface IUser extends Document {
   givenName: string;
   familyName: string;
   email: string;
+  userName: string;
   password: string;
   createdAt: Date;
   updatedAt: Date;
@@ -26,6 +27,11 @@ const userSchema = new Schema<IUser>({
   email: {
     type: String,
     required: [true, "Your email address is required"],
+    unique: true,
+  },
+  userName : {
+    type: String,
+    required: [true, "Your userName is required"],
     unique: true,
   },
   givenName: {
