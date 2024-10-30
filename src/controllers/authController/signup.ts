@@ -95,21 +95,7 @@ export const signup = async (
   next();
 };
 
-// /**
-//  * Generates a secure random OTP.
-//  * @param length - The desired length of the OTP (default is 6).
-//  * @returns The generated OTP as a string.
-//  */
-// function generateSecureOTP(length: number = 6): string {
-//   // Generate random bytes
-//   const bytes = randomBytes(length);
 
-//   // Convert to a number and mod by 10^length to get a number within the desired range
-//   const otp = parseInt(bytes.toString("hex"), 16) % 10 ** length;
-
-//   // Return OTP padded with zeros to ensure it's the correct length
-//   return otp.toString().padStart(length, "0");
-// }
 
 async function saveQuestionsToDatabase(
   user: IUser,

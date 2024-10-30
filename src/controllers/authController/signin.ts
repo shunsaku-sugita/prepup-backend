@@ -29,7 +29,7 @@ export const signin = async (
       res.status(200).json({ message: "User logged in successfully", authorization: token});
     
   } catch (error) {
-    res.status(500).json({ error: "Failed to register user" });
+    res.status(500).json({ error: "Failed to signIn user" });
 
     console.error("Failed to signup user ====>");
     console.log("Request body:", req.body);

@@ -13,12 +13,18 @@ import {
   InterviewCategorySchema,
   interviewQuestionsModel,
 } from "../../models/interviewCategory";
+import {
+  adjectives,
+  animals,
+  uniqueNamesGenerator,
+} from "unique-names-generator";
 
 const allowedFieldsToUpdate = [
   "email",
   "givenName",
   "familyName",
   "occupation",
+  "userName",
 ];
 
 export const updateProfile = async (
@@ -39,6 +45,19 @@ export const updateProfile = async (
 
   try {
     const _id = (req as CustomRequest).token.userId;
+
+    const userName = updateData.userName;
+    if (userName) {
+      const existingUserName = await User.findOne({ userName });
+      if (existingUserName) {
+        const randomName: string = uniqueNamesGenerator({
+          dictionaries: [adjectives, animals],
+        });
+        return res.status(400).json({
+          userName: `User name already taken suggested name : ${randomName}`,
+        });
+      }
+    }
 
     const updatedUser: IUser | null = await User.findByIdAndUpdate(
       _id,
@@ -110,12 +129,11 @@ const generateQuestionOnOccupation = (occupation: string, user: IUser) => {
           question: questionString,
           audio: "",
           transcript: "",
-          answer: ""
+          answer: "",
         });
 
         interviewQuestions.push(question);
       });
-
 
       if (user.interviewQuestions[0].categoryName == "General") {
         user.interviewQuestions.unshift(
@@ -123,7 +141,7 @@ const generateQuestionOnOccupation = (occupation: string, user: IUser) => {
             categoryName: occupation,
             questions: interviewQuestions,
             badge: "",
-            score: []
+            score: [],
           })
         );
       } else {
@@ -131,7 +149,7 @@ const generateQuestionOnOccupation = (occupation: string, user: IUser) => {
           categoryName: occupation,
           questions: interviewQuestions,
           badge: "",
-          score: []
+          score: [],
         });
       }
       return user.save();

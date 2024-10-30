@@ -3,6 +3,7 @@ import { Router } from "express";
 import { userVerification } from "../middlewares/authMiddleware";
 import { getProfile } from "../controllers/profileController/getProfile";
 import { updateProfile } from "../controllers/profileController/updateProfile";
+import { createPassword } from "../controllers/profileController/createPassword";
 
 const profileRoute = Router();
 
@@ -119,5 +120,7 @@ profileRoute.get('/', userVerification, getProfile);
  *                   example: "Invalid token"
  */
 profileRoute.put('/', userVerification, updateProfile);
+
+profileRoute.post("/create-password", userVerification, createPassword);
 
 export default profileRoute;
