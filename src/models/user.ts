@@ -29,7 +29,7 @@ const userSchema = new Schema<IUser>({
     required: [true, "Your email address is required"],
     unique: true,
   },
-  userName : {
+  userName: {
     type: String,
     required: [true, "Your userName is required"],
     unique: true,
@@ -44,7 +44,7 @@ const userSchema = new Schema<IUser>({
   },
   password: {
     type: String,
-    required: [true, "Your password is required"],
+    required: [false, "Your password is required"],
   },
   createdAt: {
     type: Date,

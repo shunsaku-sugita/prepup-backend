@@ -101,8 +101,8 @@ const authRoute = Router();
  */
 authRoute.post("/signup", signup);
 authRoute.post("/signin", signin);
-authRoute.post("/signin-with-google", signinWithGoogle),
-  authRoute.get("/forgot-password/otp", sendOtp);
+authRoute.post("/signin-with-google", signinWithGoogle);
+authRoute.get("/forgot-password/otp", sendOtp);
 authRoute.post("/forgot-password/otp", verifyOtp);
 authRoute.post("/forgot-password/reset", resetPassword);
 
