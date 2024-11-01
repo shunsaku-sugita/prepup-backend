@@ -58,7 +58,9 @@ export const signup = async (
       });
       return res
         .status(400)
-        .json({ userName: `User name already taken suggested name : ${randomName}` });
+        .json({
+          userName: `User name already taken suggested name : ${randomName}`,
+        });
     }
 
     const user: HydratedDocument<IUser> = await User.create({
@@ -66,7 +68,7 @@ export const signup = async (
       password,
       givenName,
       familyName,
-      userName
+      userName,
     });
 
     await saveQuestionsToDatabase(user, generalQuestions, "General");
@@ -95,9 +97,7 @@ export const signup = async (
   next();
 };
 
-
-
-async function saveQuestionsToDatabase(
+export async function saveQuestionsToDatabase(
   user: IUser,
   questionStrings: string[],
   categoryName: string
