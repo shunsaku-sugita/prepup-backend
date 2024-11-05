@@ -44,6 +44,7 @@ export const signinWithGoogle = async (
       await saveQuestionsToDatabase(user, generalQuestions, "General");
       await saveQuestionsToDatabase(user, behavioralQuestions, "Behavioral");
 
+      user.isGmailLogin = true;
       await user.save();
 
       const token = createSecretToken(user._id as number);

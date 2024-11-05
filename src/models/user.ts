@@ -21,6 +21,7 @@ export interface IUser extends Document {
   occupation: string;
   interviewQuestions: Array<IInterviewCategory>;
   savedJobs: Array<string>;
+  isGmailLogin: Boolean;
 }
 
 const userSchema = new Schema<IUser>({
@@ -98,6 +99,10 @@ const userSchema = new Schema<IUser>({
   token: String, // Field to store the reset token
   resetPasswordExpires: Date, // Field to store the token expiration time
   otp: String,
+  isGmailLogin: {
+    type: Boolean,
+    default: false
+  }
 });
 
 // Pre-save hook to hash the password
