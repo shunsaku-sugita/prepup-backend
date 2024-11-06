@@ -47,9 +47,9 @@ export const updateProfile = async (
     const _id = (req as CustomRequest).token.userId;
 
     const savedUserName = await User.findById(_id).select("userName");
-
     const userName = updateData.userName;
-    if (userName !== savedUserName?.userName) {
+
+    if (userName && userName != savedUserName?.userName) {
       const existingUserName = await User.findOne({ userName });
       if (existingUserName) {
         const randomName: string = uniqueNamesGenerator({
