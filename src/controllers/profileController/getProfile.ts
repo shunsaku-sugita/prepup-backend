@@ -10,18 +10,19 @@ export const getProfile = async (
   try {
     const _id = (req as CustomRequest).token.userId;
 
-    const user = await User.findById(_id).select('email givenName familyName occupation userName');
+    const user = await User.findById(_id).select(
+      "email givenName familyName occupation userName isGmailLogin"
+    );
 
-    if(user){
+    if (user) {
       res.status(200).json({
-        user : user
+        user: user,
       });
-    }else{
+    } else {
       res.status(401).json({
-        message : "User not found"
-      })
+        message: "User not found",
+      });
     }
-
   } catch (error) {
     res.status(400).json({ error: "Failed to register user" });
 

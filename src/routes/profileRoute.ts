@@ -1,9 +1,9 @@
-
 import { Router } from "express";
 import { userVerification } from "../middlewares/authMiddleware";
 import { getProfile } from "../controllers/profileController/getProfile";
 import { updateProfile } from "../controllers/profileController/updateProfile";
 import { createPassword } from "../controllers/profileController/createPassword";
+import { deleteUser } from "../controllers/profileController/deleteUser";
 
 const profileRoute = Router();
 
@@ -53,7 +53,7 @@ const profileRoute = Router();
  *       400:
  *         description: Bad request.
  */
-profileRoute.get('/', userVerification, getProfile);
+profileRoute.get("/", userVerification, getProfile);
 
 /**
  * @swagger
@@ -119,8 +119,9 @@ profileRoute.get('/', userVerification, getProfile);
  *                   type: string
  *                   example: "Invalid token"
  */
-profileRoute.put('/', userVerification, updateProfile);
+profileRoute.put("/", userVerification, updateProfile);
 
 profileRoute.post("/create-password", userVerification, createPassword);
+profileRoute.delete("/delete-user", userVerification, deleteUser);
 
 export default profileRoute;
