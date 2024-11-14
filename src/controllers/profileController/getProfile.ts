@@ -15,6 +15,12 @@ export const getProfile = async (
     );
 
     if (user) {
+      // Set initials for the user
+      const initials = user?.familyName
+        ? user.givenName.charAt(0) + user.familyName.charAt(0).toUpperCase()
+        : user.givenName.slice(0, 2).toUpperCase();
+      user.set("initials", initials, { strict: false });
+
       res.status(200).json({
         user: user,
       });
