@@ -9,10 +9,11 @@ const starMasterRoute = Router();
 
 /**
  * @swagger
- *   /starMaster/question:
+ *   /question:
  *     get:
  *       summary: Fetch a random question from the question bank
  *       description: Retrieves a random question from the stored STAR method question bank.
+ *       tags: [STAR Master]
  *       responses:
  *         '200':
  *           description: Successfully fetched a random question
@@ -51,10 +52,11 @@ const starMasterRoute = Router();
 
 /**
  * @swagger
- *   /starMaster/analyze:
+ *   /analyze:
  *     post:
  *       summary: Analyze user-provided STAR method answers
  *       description: Analyzes the STAR answers provided by the user for a specific question.
+ *       tags: [STAR Master]
  *       requestBody:
  *         required: true
  *         content:

@@ -12,10 +12,10 @@ const jobFinderRoute = Router();
 
 /**
  * @swagger
- * /jobFinder/{page}:
+ * /jobs/{page}:
  *   get:
  *     summary: Get jobs list
- *     tags: [Jobs]
+ *     tags: [Job Finder]
  *     parameters:
  *       - in: path
  *         name: page
@@ -53,10 +53,10 @@ const jobFinderRoute = Router();
  */
 /**
  * @swagger
- * /jobFinder/keywords/{page}:
+ * /jobs/keywords/{page}:
  *   get:
  *     summary: Search jobs by keyword
- *     tags: [Jobs]
+ *     tags: [Job Finder]
  *     parameters:
  *       - in: path
  *         name: page
@@ -78,7 +78,7 @@ const jobFinderRoute = Router();
  */
 /**
  * @swagger
- * /jobFinder/bookmark:
+ * /jobs/bookmark:
  *   post:
  *     summary: Bookmark a job
  *     tags: [Jobs]
@@ -112,7 +112,7 @@ const jobFinderRoute = Router();
  */
 /**
  * @swagger
- * /jobFinder/bookmark/{jobId}:
+ * /jobs/bookmark/{jobId}:
  *   delete:
  *     summary: Unbookmark a job
  *     tags: [Jobs]
@@ -133,7 +133,7 @@ const jobFinderRoute = Router();
  */
 /**
  * @swagger
- * /jobFinder/bookmarked:
+ * /jobs/bookmarked:
  *   get:
  *     summary: Get all bookmarked jobs
  *     tags: [Jobs]
