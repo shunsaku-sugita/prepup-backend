@@ -10,6 +10,7 @@
   <img src="https://img.shields.io/badge/MongoDB-4EA94B?style=for-the-badge&logo=mongodb&logoColor=white" alt="MongoDB">
   <img src="https://img.shields.io/badge/Express.js-404D59?style=for-the-badge&logo=express&logoColor=white" alt="Express.js">
   <img src="https://img.shields.io/badge/Socket.io-010101?style=for-the-badge&logo=socket.io&logoColor=white" alt="Socket.io">
+  <img src="https://img.shields.io/badge/Redis-DC382D?style=for-the-badge&logo=socket.io&logoColor=white" alt="Redis">
 </div>
 
 ## 🎯 Project Overview
@@ -31,7 +32,7 @@
 - **Job Discovery**: Integration with Adzuna API for real-time job listings
 - **Smart Search**: Keyword-based job filtering and recommendations
 - **Job Bookmarking**: Save and organize interesting job opportunities
-- **Personalized Feed**: Curated job suggestions based on user profile
+- **Practise Interview**: Generate interview questions based on Job description 
 
 ### 👤 User Experience
 - **Authentication**: Secure JWT-based authentication with Google OAuth support
@@ -46,6 +47,10 @@ Here are a few snapshots of the PrepUp mobile application in action.
 | Job Search | AI Interview | Answer Feedback |
 | :---: | :---: | :---: |
 | ![Job Search Screen](./docs/images/feat_job_finder.png) | ![AI Interview Screen](./docs/images/feat_simulator.png) | ![Answer Feedback Screen](./docs/images/feat_answered_feedback.png) |
+
+| STAR Master | Audio Transcript | Home |
+| :---: | :---: | :---: |
+| ![STAR Master Screen](./docs/images/feat_star_master.png) | ![Audio Transcript Screen](./docs/images/feat_simulator_user_answer.png) | ![Home Screen](./docs/images/feat_category_board.png) |
 
 ## 🏛️ System Architecture
 <div align="center">
