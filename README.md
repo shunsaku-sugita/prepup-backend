@@ -227,10 +227,11 @@ This project demonstrates proficiency in:
 - **Live Demo**: [https://prepup.ca/](https://prepup.ca/)
 - **API Documentation**: [https://api.prepup.ca/api-docs](https://api.prepup.ca/api-docs)
 - **Frontend Repository**: [shunsaku-sugita/prepup-frontend](https://github.com/shunsaku-sugita/prepup-frontend)
-- **Presentation Slides**: [Add your presentation slides link]
 
 ---
 
 <div align="center">
   <p>Built with ❤️ for interview preparation</p>
 </div>
+
+
